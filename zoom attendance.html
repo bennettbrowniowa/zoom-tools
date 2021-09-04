@@ -28,18 +28,25 @@
 		var studentLists = students.map(parseStudent);
 		function parseStudent(line) {
 			var studentData = line.split(" ");
-			var lastName = studentData[1];
-			var otherNames = studentData.slice(2,studentData.length-1);
+			var firstName = studentData[1];
+			var lastNames = studentData.slice(2,studentData.length-1).join(" ");
 			var minutes = studentData[studentData.length-1];
-			return [lastName, otherNames, minutes];
+			return [firstName, lastNames, minutes];
+		}
+		var sortedStudents = studentLists.sort(lastnamer);
+		function lastnamer(a,b){
+			if (typeof a[1] != "string"){console.log("a:",a); return -1;} 
+			else if (typeof b[1] != "string"){console.log("b:",b);return 1;} 
+			else if (a[1].toLowerCase() < b[1].toLowerCase()){
+				return -1;}
+			else {return 1;}
 		}
 		debug.innerHTML = "";
-		lastNames = studentLists.map(function(s){return s[0];});
-		studentLists.forEach(function (s){
-			debug.innerHTML += s[0]+"<br>";
+		//firstNames = studentLists.map(function(s){return s[0];});
+		sortedStudents.forEach(function (s){
+			debug.innerHTML += s[0]+" "+s[1]+"<br>";
 		});
 		
-		console.log(students, studentLists);
 		/*debug.innerHTML=zoomReport;
 		namekeys = Object.keys(chat);
 		debug.innerHTML += namekeys;
@@ -62,16 +69,13 @@
   <h1><label for="zoomLog">Paste Zoom Usage report (Show unique user checked):</label></h1> 
   <input type="text" id="zoomLog" name="chatInput"><p>
 No data will leave your computer, so this tool is FERPA compliant even if the chat content becomes an educational record by virtue of being graded. Licensed Creative Commons Sharealike CC-SA-3.0 Bennett Brown
-  <p>Output (chats below roster):
+  <p>Output:
 <p id="output">
   <p id="debug">
    
   <h1><label for="InfCRoster">Paste Infinite Campus roster here:</label></h1> <input type="text" id="zoomLog" name="InfCRoster"><p> <button action="storeRoster();">Store roster</button>
   <button action="showRosters();">Show rosters</button>
  
- <p>This is a paragraph.</p>
- <p>This is another paragraph.</p>
 </div>
-
 </body>
 </html>
