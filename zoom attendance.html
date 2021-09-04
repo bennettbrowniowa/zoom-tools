@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<title>AttendanceCode</title>
+<link rel="stylesheet" href=""><style></style>
+<script>window.onload=function() {
+	//Check for cookie
+	document.cookie = "sdf=1;";
+	//"rosters=[\"Algebra2\":[\"Brown, Ben (BJ)\"] ; expires=Sun, 2 Jan 2022 12:00:00 UTC"; 
+	var output = document.getElementById("output");
+	var inputText = document.getElementById("zoomLog");
+	var debug = document.getElementById("debug");
+
+	//event handler binding
+	inputText.oninput = suggestAttendance; //onchange requires focus loss
+
+	console.log(document.cookie);
+	//event handler
+	function suggestAttendance() {
+		//gets a string from the DOM
+		//assigns a list to global var zoomReport
+		var outputA ="";
+		var outputB ="";
+		var result = "";
+		
+		var zoomReport = inputText.value;
+		var students = zoomReport.split("\t");
+		var studentLists = students.map(parseStudent);
+		function parseStudent(line) {
+			var studentData = line.split(" ");
+			var lastName = studentData[1];
+			var otherNames = studentData.slice(2,studentData.length-1);
+			var minutes = studentData[studentData.length-1];
+			return [lastName, otherNames, minutes];
+		}
+		debug.innerHTML = "";
+		lastNames = studentLists.map(function(s){return s[0];});
+		studentLists.forEach(function (s){
+			debug.innerHTML += s[0]+"<br>";
+		});
+		
+		console.log(students, studentLists);
+		/*debug.innerHTML=zoomReport;
+		namekeys = Object.keys(chat);
+		debug.innerHTML += namekeys;
+		sortedNameKeys = namekeys.sort(function(a,b){
+		if (a.toLowerCase()<b.toLowerCase())     
+		  {return -1;}
+		else
+		  {return 1;}
+		});  
+		output.innerHTML += outputA + outputB; */
+	}
+};</script>
+</head>
+<body>
+
+<div class="">
+ <h1>Zoom attendance</h1>
+ 
+ <form>
+  <h1><label for="zoomLog">Paste Zoom Usage report (Show unique user checked):</label></h1> 
+  <input type="text" id="zoomLog" name="chatInput"><p>
+No data will leave your computer, so this tool is FERPA compliant even if the chat content becomes an educational record by virtue of being graded. Licensed Creative Commons Sharealike CC-SA-3.0 Bennett Brown
+  <p>Output (chats below roster):
+<p id="output">
+  <p id="debug">
+   
+  <h1><label for="InfCRoster">Paste Infinite Campus roster here:</label></h1> <input type="text" id="zoomLog" name="InfCRoster"><p> <button action="storeRoster();">Store roster</button>
+  <button action="showRosters();">Show rosters</button>
+ 
+ <p>This is a paragraph.</p>
+ <p>This is another paragraph.</p>
+</div>
+
+</body>
+</html>
