@@ -57,7 +57,7 @@
 	//event handler for Infinite Campus roster paste
 	function receiveRoster() {
 		var rosterText = infiniteCampusInput.value;
-		var allStudents = rosterText.split(/\d\d\d\d +[a-zA-Z]/);
+		var allStudents = rosterText.split(/\d\d\d\d +(?=[a-zA-Z])/);
 		infiniteCampusOutput.innerHTML = allStudents;
 		console.log(allStudents);
 		var allStudentsLists = allStudents.map(parseInfiniteCampusRosterRow);
@@ -76,43 +76,34 @@
 			var additionalData = studentData.slice(3, studentData.length).join("\t");
 			return [firstNames, lastName, sex, gradeLevel, birthdate, additionalData];
 		}
-		console.log(allStudentsLists);
-		/*var sortedStudents = studentLists.sort(lastnamer);
-		function lastnamer(a,b){
-			if (typeof a[1] != "string"){return -1;} 
-			else if (typeof b[1] != "string"){return 1;} 
-			else if (a[1].toLowerCase() < b[1].toLowerCase()){
-				return -1;}
-			else {return 1;}
-		}
-		debug.innerHTML = "";
+		infiniteCampusOutput.innerHTML="";
 		//firstNames = studentLists.map(function(s){return s[0];});
-		sortedStudents.forEach(function (s){
-			debug.innerHTML += s[0]+" "+s[1]+"<br>";
-		});*/
+		var n=0;
+		allStudentsLists.forEach(function (s){
+			infiniteCampusOutput.innerHTML += "<span id=\"roster"+n+"\" style=\"color: red;\">"+s[0]+" "+s[1]+"<br>";
+			n+=1;
+		});
 	}
 };</script>
 </head>
 <body>
 
 
- <h1>Zoom attendance</h1>
+ <h1>Zoom attendance</h1>No data is transmitted by this web page. Rosters are stored in a cookie, in local browser's dara. This tool is therefore FERPA compliant
+even. Licensed Creative Commons Share-alike CC-SA-3.0 Bennett Brown
  
- <form>
-  <h1><label for="zoomInput">Paste Zoom Usage report ("Show unique users" checked):</label></h1> 
-  <input type="text" id="zoomLog" name="zoomInput"><p>
-No data will leave your computer, so this tool is FERPA compliant
-even if the chat content becomes an educational record 
-by virtue of being graded. 
-Licensed Creative Commons Share-alike CC-SA-3.0 Bennett Brown
-  <p>Output:
-<p id="zoomOutput"> 
-<p style="float: right;" id="infiniteCampusOutput">
-	<h1><label for="infCRoster">Paste Infinite Campus roster here:</label>
-	</h1> <input type="text" id="infiniteCampusInput" name="InfCRoster">
+<form>
+<div style="float: right; width: 50%;">
+	<label for="infCRoster"><h1>Paste Infinite Campus roster here:</h1></label>
+    <input type="text" id="infiniteCampusInput" name="InfCRoster">
 	<p> <button action="storeRoster();">Store roster</button>
 	<button action="showRosters();">Show rosters</button>
-
+	<p id="infiniteCampusOutput">
+</div>
+  <label for="zoomInput"><h1>Paste Zoom Usage report here:</h1> Check the "Show unique users" box.</label> 
+  <input type="text" id="zoomLog" name="zoomInput"><p>
+<p>Output:
+<p id="zoomOutput">
 </form>
 <p style="float: none;" id="debug">
 </body>
