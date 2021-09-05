@@ -18,7 +18,7 @@
 	var debug = document.getElementById("debug");
 	// Data structures being integrated
 	var studentsInZoom = [["First name", "Last names", "minutes"]];
-	var studentsInCourse = [["First names", "Last name", "minutes", "Zoom name"]];
+	var studentsInCourse = [["firstNames", "lastName", "sex", "gradeLevel", "birthdate", "additionalData"]];
 	var infiniteCampusRosters = {classSectionName:[["firstNames", "lastName", "sex", "gradeLevel", "birthdate", "additionalData"]]};
 	
 	//event handler binding
@@ -53,11 +53,32 @@
 	* Update the view
 	******/
 	function renderRoster(){
-		// Render Zoom results
-		zoomOutput.innerHTML = "";
+		/***
+		* Render Zoom results
+		***/
+		// Clear Zoom prior results
+		while (zoomOutput.firstChild) {
+			zoomOutput.removeChild(zoomOutput.firstChild);
+		}
+		// Append each student from Zoom.
 		studentsInZoom.forEach(function (s){
-			zoomOutput.innerHTML += s[s.length-1]+" "+ s[0]+" "+s[1]+"<br>";
+			studentOutput = document.createElement("span");
+			studentOutput.innerHTML = s[s.length-1]+' '+ s[0]+' '+s[1]+'<br>';
+			studentOutput.style.color = isStudentOnRoster(s);
+			zoomOutput.appendChild(studentOutput);
 		});
+		// Colorize zoom roster
+		function isStudentOnRoster(zoomStudent){
+			//if first name present
+			var colorCode="red";
+			studentsInCourse.forEach(function(studentOnRoster) {
+				c = compareStudents(zoomStudent, studentOnRoster);
+				if (typeof c == "string") {console.log(c);
+				colorCode=c;}
+			});
+			return colorCode;
+			
+		}
 		/**
 		* Render Infinite Campus results.
 		*/
@@ -117,7 +138,6 @@
 	function receiveRoster() {
 		var rosterText = infiniteCampusInput.value;
 		var allStudents = rosterText.split(/\d\d\d\d +(?=[a-zA-Z])/);
-		infiniteCampusOutput.innerHTML = allStudents;
 		studentsInCourse = allStudents.map(parseInfiniteCampusRosterRow);
 		function parseInfiniteCampusRosterRow(line) {
 			// Last name goes up to the comma in rendered Infinite Campus roster view
@@ -156,7 +176,9 @@
 		<div id="zoom">
 			<label for="zoomInput"><h1>Paste Zoom Usage report here:</h1> Check the "Show unique users" box.</label> 
 			<input type="text" id="zoomLog" name="zoomInput"><p>
-			<p>Output:
+			<p>Output:<span style="color:green;">Matched </span>
+			<span style="color:orange;">Maybe matched </span> or 
+			<span style="color:red;">Unmatched </span>
 			<div id="zoomOutput"></div>
 		</div>
 	</form>
