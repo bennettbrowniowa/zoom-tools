@@ -16,16 +16,20 @@
 	var infiniteCampusOutput = document.getElementById("infiniteCampusOutput");
 	var infiniteCampusInput = document.getElementById("infiniteCampusInput");
 	var debug = document.getElementById("debug");
-
+	// Data structures being integrated
+	var studentsInZoom = [["First name", "Last names", "minutes"]];
+	var studentsInCourse = [["First names", "Last name", "minutes", "Zoom name"]];
+	var infiniteCampusRosters = {classSectionName:[["firstNames", "lastName", "sex", "gradeLevel", "birthdate", "additionalData"]]};
+	
 	//event handler binding
-	zoomInput.oninput = suggestAttendance; //onchange requires focus loss
+	zoomInput.oninput = receiveZoomInput; //onchange requires focus loss
 	//event handler for zoom paste
-	function suggestAttendance() {
+	function receiveZoomInput() {
 		// Get the text input and break into students
 		var zoomReport = zoomInput.value;
 		var students = zoomReport.split("\t");
 		// Parse the string from each student
-		var studentLists = students.map(parseStudent);
+		studentsInZoom = students.map(parseStudent);
 		function parseStudent(line) {
 			var studentData = line.split(" ");
 			var firstName = studentData[1];
@@ -35,7 +39,7 @@
 			return [firstName, lastNames, minutes];
 		}
 		// Sort by last name a-z
-		var sortedStudents = studentLists.sort(byLastName);
+		studentsInZoom.sort(byLastName);
 		function byLastName(s1, s2){
 			if (typeof s1[1] != "string"){return -1;} 
 			else if (typeof s2[1] != "string"){return 1;} 
@@ -43,11 +47,32 @@
 				return -1;}
 			else {return 1;}
 		}
+		render();
+	}
+	function render(){
+		//Render Zoom results
 		debug.innerHTML = "";
-		//firstNames = studentLists.map(function(s){return s[0];});
-		sortedStudents.forEach(function (s){
-			debug.innerHTML += s[s.length-1]+s[0]+" "+s[1]+"<br>";
+		studentsInZoom.forEach(function (s){
+			debug.innerHTML += s[s.length-1]+" "+ s[0]+" "+s[1]+"<br>";
 		});
+		// Render Infinite Campus results
+		infiniteCampusOutput.innerHTML="";
+		var n=0;
+		studentsInCourse.forEach(function (s){
+			infiniteCampusOutput.innerHTML += '<span id="roster'+n+'" style="color: ';
+			if (studentInZoom(s)) {infiniteCampusOutput.innerHTML +='green;">';
+			} else {infiniteCampusOutput.innerHTML +='red;">';}
+			infiniteCampusOutput.innerHTML += s[0]+' '+s[1]+'<br></span>';
+			n += 1;
+		});
+		function studentInZoom(s){
+			var present = false;
+			//if first name present
+				//if last name right
+					present = true;
+			return present;
+			
+		}
 	}
 	/***
 	* Infinite Campus roster entry and output
@@ -59,8 +84,7 @@
 		var rosterText = infiniteCampusInput.value;
 		var allStudents = rosterText.split(/\d\d\d\d +(?=[a-zA-Z])/);
 		infiniteCampusOutput.innerHTML = allStudents;
-		console.log(allStudents);
-		var allStudentsLists = allStudents.map(parseInfiniteCampusRosterRow);
+		studentsInCourse = allStudents.map(parseInfiniteCampusRosterRow);
 		function parseInfiniteCampusRosterRow(line) {
 			// Last name goes up to the comma in rendered Infinite Campus roster view
 			var studentData = line.split(",");
@@ -76,13 +100,7 @@
 			var additionalData = studentData.slice(3, studentData.length).join("\t");
 			return [firstNames, lastName, sex, gradeLevel, birthdate, additionalData];
 		}
-		infiniteCampusOutput.innerHTML="";
-		//firstNames = studentLists.map(function(s){return s[0];});
-		var n=0;
-		allStudentsLists.forEach(function (s){
-			infiniteCampusOutput.innerHTML += "<span id=\"roster"+n+"\" style=\"color: red;\">"+s[0]+" "+s[1]+"<br>";
-			n+=1;
-		});
+		render();
 	}
 };</script>
 </head>
