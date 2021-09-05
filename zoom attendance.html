@@ -4,12 +4,6 @@
 <title>ZoomAttendanceTool</title>
 <link rel="stylesheet" href=""><style></style>
 <script>window.onload=function() {
-	//Cookie to hold rosters.
-	//Check for cookie
-	//document.cookie = "sdf=1;";
-	// expire to hold cookies after session
-	//"rosters=[\"Algebra2\":[\"Brown, Ben (BJ)\"] ; expires=Sun, 2 Jan 2022 12:00:00 UTC"; 
-	//console.log(document.cookie);
 	
 	var output = document.getElementById("zoomOutput");
 	var zoomInput = document.getElementById("zoomLog");
@@ -160,25 +154,21 @@
 </head>
 <body>
 	<h1>Zoom attendance</h1>
-	No data is transmitted by this web page. 
-	Rosters are stored in a cookie, in local browser's data. 
-	This tool is therefore FERPA compliant.
+	Pasting information in the textboxes does not cause any data to be transmitted from your computer. 
 	Licensed Creative Commons Share-alike CC-SA-3.0 Bennett Brown
-
+<h3><p>Output:<span style="color:green;">Matched </span>,
+			<span style="color:orange;">Maybe matched </span>, or 
+			<span style="color:red;">Unmatched </span></h3>
 	<form>
-		<div style="float: right; width: 50%;">
+		<div id="infiniteCampus" style="float: right; width: 50%;">
 			<label for="infCRoster"><h1>Paste Infinite Campus roster here:</h1></label>
 			<input type="text" id="infiniteCampusInput" name="InfCRoster">
-			<p> <button action="storeRoster();">Store roster</button>
-			<button action="showRosters();">Show rosters</button>
 			<div id="infiniteCampusOutput"></div>
 		</div>
-		<div id="zoom">
-			<label for="zoomInput"><h1>Paste Zoom Usage report here:</h1> Check the "Show unique users" box.</label> 
+		<div id="zoom" style="float: left; width: 50%;>
+			<label for="zoomInput"><h1>Paste Zoom Usage report here:</h1> Check the "Show unique users" box before copying.</label> 
 			<input type="text" id="zoomLog" name="zoomInput"><p>
-			<p>Output:<span style="color:green;">Matched </span>
-			<span style="color:orange;">Maybe matched </span> or 
-			<span style="color:red;">Unmatched </span>
+			
 			<div id="zoomOutput"></div>
 		</div>
 	</form>
