@@ -47,24 +47,33 @@
 				return -1;}
 			else {return 1;}
 		}
-		render();
+		renderRoster();
 	}
-	function render(){
-		//Render Zoom results
+	/*********
+	* Update the view
+	******/
+	function renderRoster(){
+		// Render Zoom results
 		debug.innerHTML = "";
 		studentsInZoom.forEach(function (s){
 			debug.innerHTML += s[s.length-1]+" "+ s[0]+" "+s[1]+"<br>";
 		});
-		// Render Infinite Campus results
-		infiniteCampusOutput.innerHTML="";
-		var n=0;
+		/**
+		* Render Infinite Campus results.
+		*/
+		// Clear Infinite Campus prior results
+		while (infiniteCampusOutput.firstChild) {
+			infiniteCampusOutput.removeChild(infiniteCampusOutput.firstChild);
+		}
+		// Append each student from Infinite Campus.
 		studentsInCourse.forEach(function (s){
-			infiniteCampusOutput.innerHTML += '<span id="roster'+n+'" style="color: ';
-			if (studentInZoom(s)) {infiniteCampusOutput.innerHTML +='green;">';
-			} else {infiniteCampusOutput.innerHTML +='red;">';}
-			infiniteCampusOutput.innerHTML += s[0]+' '+s[1]+'<br></span>';
-			n += 1;
+			studentOutput = document.createElement("span");
+			studentOutput.innerHTML = s[0]+' '+s[1]+'<br>';
+			if (studentInZoom(s)) {studentOutput.style.color = "green";
+			} else {studentOutput.style.color = "red";}
+			infiniteCampusOutput.appendChild(studentOutput);
 		});
+		//Colorize
 		function studentInZoom(s){
 			var present = false;
 			//if first name present
@@ -100,29 +109,32 @@
 			var additionalData = studentData.slice(3, studentData.length).join("\t");
 			return [firstNames, lastName, sex, gradeLevel, birthdate, additionalData];
 		}
-		render();
+		renderRoster();
 	}
 };</script>
 </head>
 <body>
+	<h1>Zoom attendance</h1>
+	No data is transmitted by this web page. 
+	Rosters are stored in a cookie, in local browser's data. 
+	This tool is therefore FERPA compliant.
+	Licensed Creative Commons Share-alike CC-SA-3.0 Bennett Brown
 
-
- <h1>Zoom attendance</h1>No data is transmitted by this web page. Rosters are stored in a cookie, in local browser's dara. This tool is therefore FERPA compliant
-even. Licensed Creative Commons Share-alike CC-SA-3.0 Bennett Brown
- 
-<form>
-<div style="float: right; width: 50%;">
-	<label for="infCRoster"><h1>Paste Infinite Campus roster here:</h1></label>
-    <input type="text" id="infiniteCampusInput" name="InfCRoster">
-	<p> <button action="storeRoster();">Store roster</button>
-	<button action="showRosters();">Show rosters</button>
-	<p id="infiniteCampusOutput">
-</div>
-  <label for="zoomInput"><h1>Paste Zoom Usage report here:</h1> Check the "Show unique users" box.</label> 
-  <input type="text" id="zoomLog" name="zoomInput"><p>
-<p>Output:
-<p id="zoomOutput">
-</form>
-<p style="float: none;" id="debug">
+	<form>
+		<div style="float: right; width: 50%;">
+			<label for="infCRoster"><h1>Paste Infinite Campus roster here:</h1></label>
+			<input type="text" id="infiniteCampusInput" name="InfCRoster">
+			<p> <button action="storeRoster();">Store roster</button>
+			<button action="showRosters();">Show rosters</button>
+			<div id="infiniteCampusOutput"></div>
+		</div>
+		<div id="zoom">
+			<label for="zoomInput"><h1>Paste Zoom Usage report here:</h1> Check the "Show unique users" box.</label> 
+			<input type="text" id="zoomLog" name="zoomInput"><p>
+			<p>Output:
+			<div id="zoomOutput"></div>
+		</div>
+	</form>
+	<div id="debug"></div>
 </body>
 </html>
