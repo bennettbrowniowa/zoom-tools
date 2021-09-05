@@ -69,16 +69,32 @@
 		studentsInCourse.forEach(function (s){
 			studentOutput = document.createElement("span");
 			studentOutput.innerHTML = s[0]+' '+s[1]+'<br>';
-			if (studentInZoom(s)) {studentOutput.style.color = "green";
-			} else {studentOutput.style.color = "red";}
+			studentOutput.style.color = studentInZoom(s);
 			infiniteCampusOutput.appendChild(studentOutput);
 		});
-		//Colorize
-		function studentInZoom(s){
-			var present = false;
+		// Return color
+		function studentInZoom(infiniteCampusStudent){
+			//one-way flag initialize to not present
+			var present = "red";
 			//if first name present
-				//if last name right
-					present = true;
+			console.log("infC roster[0] split: ",infiniteCampusStudent[0].split(" "));
+			console.log("comparing infC first name ",infiniteCampusStudent[0].split(" ")[0]);
+			var infCFirstName = infiniteCampusStudent[0].split(" ")[0];
+			studentsInZoom.forEach(function(zoomStudent) {
+				console.log('*',infCFirstName,' v. ',zoomStudent[0]);
+				if (zoomStudent[0]&&infCFirstName.toLowerCase()==zoomStudent[0].toLowerCase()) {
+					//if last name right
+					if(infiniteCampusStudent[1].toLowerCase()==zoomStudent[1].split(" ")[0].toLowerCase()) {
+						console.log("here" , infiniteCampusStudent[1], zoomStudent[1].split(" ")[0]);
+						present = "green";
+					}
+					else {
+						console.log("last names: " , 
+							infiniteCampusStudent[1], zoomStudent[1].split(" ")[0]);
+						present = "orange";
+					}
+				}
+			});
 			return present;
 			
 		}
@@ -96,9 +112,9 @@
 		studentsInCourse = allStudents.map(parseInfiniteCampusRosterRow);
 		function parseInfiniteCampusRosterRow(line) {
 			// Last name goes up to the comma in rendered Infinite Campus roster view
-			var studentData = line.split(",");
+			var studentData = line.split(", ");
 			var lastName = studentData[0];
-			// Separate first name at tab, eat up space after comma
+			// Separate first name at tab, eat up space after tab
 			studentData = studentData.slice(1,studentData.length).join(" ").split("\t ");
 			var firstNames = studentData[0];
 			// Parse and assign remaining data
