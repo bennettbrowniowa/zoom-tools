@@ -54,9 +54,9 @@
 	******/
 	function renderRoster(){
 		// Render Zoom results
-		debug.innerHTML = "";
+		zoomOutput.innerHTML = "";
 		studentsInZoom.forEach(function (s){
-			debug.innerHTML += s[s.length-1]+" "+ s[0]+" "+s[1]+"<br>";
+			zoomOutput.innerHTML += s[s.length-1]+" "+ s[0]+" "+s[1]+"<br>";
 		});
 		/**
 		* Render Infinite Campus results.
@@ -69,34 +69,43 @@
 		studentsInCourse.forEach(function (s){
 			studentOutput = document.createElement("span");
 			studentOutput.innerHTML = s[0]+' '+s[1]+'<br>';
-			studentOutput.style.color = studentInZoom(s);
+			studentOutput.style.color = wasStudentInZoom(s);
 			infiniteCampusOutput.appendChild(studentOutput);
 		});
-		// Return color
-		function studentInZoom(infiniteCampusStudent){
-			//one-way flag initialize to not present
-			var present = "red";
+		// Colorize infinite campus roster
+		function wasStudentInZoom(infiniteCampusStudent){
 			//if first name present
+			var colorCode="red";
+			studentsInZoom.forEach(function(zoomStudent) {
+				c = compareStudents(zoomStudent, infiniteCampusStudent);
+				if (typeof c == "string") {console.log(c);
+				colorCode=c;}
+			});
+			return colorCode;
+			
+		}
+		function compareStudents(zoomStudent,infiniteCampusStudent){
+			/***
+			* Takes two Array objects of zoom and IC data respectively
+			* Returns a string for the color to code if present, otherwise false
+			*/
 			console.log("infC roster[0] split: ",infiniteCampusStudent[0].split(" "));
 			console.log("comparing infC first name ",infiniteCampusStudent[0].split(" ")[0]);
 			var infCFirstName = infiniteCampusStudent[0].split(" ")[0];
-			studentsInZoom.forEach(function(zoomStudent) {
-				console.log('*',infCFirstName,' v. ',zoomStudent[0]);
-				if (zoomStudent[0]&&infCFirstName.toLowerCase()==zoomStudent[0].toLowerCase()) {
-					//if last name right
-					if(infiniteCampusStudent[1].toLowerCase()==zoomStudent[1].split(" ")[0].toLowerCase()) {
-						console.log("here" , infiniteCampusStudent[1], zoomStudent[1].split(" ")[0]);
-						present = "green";
-					}
-					else {
-						console.log("last names: " , 
-							infiniteCampusStudent[1], zoomStudent[1].split(" ")[0]);
-						present = "orange";
-					}
+			console.log('*',infCFirstName,' v. ',zoomStudent[0]);
+			if (zoomStudent[0]&&infCFirstName.toLowerCase()==zoomStudent[0].toLowerCase()) {
+				//if last name right
+				if(infiniteCampusStudent[1].toLowerCase()==zoomStudent[1].split(" ")[0].toLowerCase()) {
+					console.log("here" , infiniteCampusStudent[1], zoomStudent[1].split(" ")[0]);
+					return "green";
 				}
-			});
-			return present;
+				else {
+					console.log("last names: " , 
+						infiniteCampusStudent[1], zoomStudent[1].split(" ")[0]);
+					return "orange";
+				}
 			
+			} else {return false;}
 		}
 	}
 	/***
