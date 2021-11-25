@@ -14,12 +14,21 @@ def get_all_chat():
                 with open(chatFileName,"r") as chatfilehandle:
                     chat = chatfilehandle.readlines()
                 for line in chat:
-                    if line[0]!='\t' or len(all_chat)==0:
-                        all_chat.append([folder.name,line,""])
-                    else:
-                        all_chat[-1][2]+=line
+                    try:
+                        if line[0]!='\t':
+                            all_chat.append([folder.name,line,""])
+                        else:
+                            if len(all_chat)==0:
+                                pass#print("get all chat: nonerror voice 1: ",all_chat[-1])
+
+                            else:
+                                #print("get all chat: nonerror voice 2: ",all_chat[-1])
+                                all_chat[-1][2]+=line
+                    except:
+                        print("get_all_chat: unable to parse line: ",line) # errors from this unicode encoded somehow in chat: ☹️
             except:
                 print("get_all_chat: file missing - ",folder.name, " has no meeting_saved_chat.")
+                print("line: ",line, len(chat), chat[0])
     print("all_chat contains ",len(all_chat)," entries")
     return all_chat
 
