@@ -57,16 +57,25 @@ def filter_chat(chats, classname=None, start_date=None, end_date=None):
     # Returns a list of chats in attribute-value dictionary pairs
     # classname!=None : filters, prints a list of classes filtered out
     # dates!None: independent filters, inclusive
+    if classname:
+        chat_subset = filter_chat_by_class(chats, classname)
+    else:
+        chat_subset = chats
+    if start_date or end_date:
+        chat_subset = filter_chat_by_date(chat_subset, start_date)
+    return chat_subset
+
+def filter_chat_by_class(chats, classname):
+    # Accepts a list of chats in dictionary form
+    # Returns a list of chats in attribute-value dictionary pairs
     filtered_chats = []
     excluded_classes = set()
     for chat in chats:
-        if classname:
-            if chat["class"]==classname:
-                filtered_chats.append(chat)
-            else:
-                excluded_classes.add(chat["class"])
-    if classname:
-        pass#print("Excluded classes: ", excluded_classes)
+        if chat["class"]==classname:
+            filtered_chats.append(chat)
+        else:
+            excluded_classes.add(chat["class"])
+    #print("Excluded classes: ", excluded_classes)
     return filtered_chats
 
 all_chat=get_all_chat() #list of (dateclass,timefromto,content)
