@@ -19,24 +19,27 @@ def get_all_chat():
                     else:
                         all_chat[-1][2]+=line
             except:
-                print(folder.name, " has no meeting_saved_chat.")
+                print("get_all_chat: file missing - ",folder.name, " has no meeting_saved_chat.")
     print("all_chat contains ",len(all_chat)," entries")
     return all_chat
 
 def parse_chat(chat):
-    chat_date=chat[0].split(" ")[0]
+    chat_date = chat[0].split(" ")[0]
+    start_time = chat[0].split(" ")[1]
     class_period=" ".join(chat[0].split(" ")[2:-1])
     chat_time=chat[1].split(" ")[0]
     try:
-        chat_sender=chat[1].split("From ")[1].split(" To ")[0]
+        chat_sender=chat[1].split("From ")[1].split(" to ")[0].strip()
     except:
         print("parse_chat exception: ",chat)
-        chat_sender=chat[2]
     chat_private="Everyone:" not in chat[1]
-    chat_content=chat[2]
+    chat_content=chat[2].replace("\t","",1)#remove first tab
+    first_name = chat_sender.split(" ")[0]
+    last_name = " ".join(chat_sender.split(" ")[1:])
     return {"date":chat_date,
+            "time":chat_time ,"minute":int(chat_time.split(":")[1])-int(start_time.split(".")[1]),
             "class":class_period,
-            "student":chat_sender,
+            "student":chat_sender,"first name":first_name,"last name":last_name,
             "private":chat_private,
             "text":chat_content}
 
@@ -54,10 +57,13 @@ def filter_chat(chats, classname=None, start_date=None, end_date=None):
             else:
                 excluded_classes.add(chat["class"])
     if classname:
-        print("Excluded classes: ", excluded_classes)
+        pass#print("Excluded classes: ", excluded_classes)
     return filtered_chats
 
 all_chat=get_all_chat() #list of (dateclass,timefromto,content)
 chat_list_of_dict = list(map(parse_chat, all_chat))
-preal = filter_chat(chat_list_of_dict,'Pre-Algebra')
-#'Algebra II Pd 5 with B Brown', 'Algebra II Pd4 with B Brown', 'Junior High Algebra with B Brown (Pd 1)','HS Algebra (Pd 9 with B Brown)'
+classes = ['Pre-Algebra','Algebra II Pd 5 with B Brown', 'Algebra II Pd4 with B Brown', 'Junior High Algebra with B Brown (Pd 1)','HS Algebra (Pd 9 with B Brown)']
+class_chat={}
+for a_class in classes:
+    class_chat[a_class] = filter_chat(chat_list_of_dict,a_class, start_date=None,end_date=None)
+    print(a_class, " had ",len(class_chat[a_class]), " chats.")
