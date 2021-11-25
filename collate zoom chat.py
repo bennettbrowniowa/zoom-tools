@@ -78,6 +78,18 @@ def filter_chat_by_class(chats, classname):
     #print("Excluded classes: ", excluded_classes)
     return filtered_chats
 
+def count_by_student(chats):
+    # chats is a list of attribute-value dicts
+    #returns a dict of "lastname, firstname":{"count": int, "text":[[date,minute,text],[d,m,t],...]}
+    results = {}
+    for chat in chats:
+        name = chat['last name']+', '+chat['first name']
+        if name not in results:
+            results[name]={"count":0,"text":[]}
+        results[name]["count"]+=1
+        results[name]["text"]+=[chat["date"],chat["minute"],chat["text"]]
+    return results
+
 all_chat=get_all_chat() #list of (dateclass,timefromto,content)
 chat_list_of_dict = list(map(parse_chat, all_chat))
 classes = ['Pre-Algebra','Algebra II Pd 5 with B Brown', 'Algebra II Pd4 with B Brown', 'Junior High Algebra with B Brown (Pd 1)','HS Algebra (Pd 9 with B Brown)']
@@ -85,3 +97,8 @@ class_chat={}
 for a_class in classes:
     class_chat[a_class] = filter_chat(chat_list_of_dict,a_class, start_date=None,end_date=None)
     print(a_class, " had ",len(class_chat[a_class]), " chats.")
+counts = count_by_student(class_chat[a_class])
+counts_sorted = sorted(counts.keys())
+#counts_sorted = [counts[key] for key in sorted(counts.keys)]
+for name in counts_sorted[0:4]:
+    print(name,": ",counts[name]["count"],"\t",counts[name]["text"])
