@@ -46,7 +46,7 @@ def parse_chat(chat):
     first_name = chat_sender.split(" ")[0]
     last_name = " ".join(chat_sender.split(" ")[1:])
     return {"date":chat_date,
-            "time":chat_time ,"minute":int(chat_time.split(":")[1])-int(start_time.split(".")[1]),
+            "time":chat_time ,"minute":(int(chat_time.split(":")[1])-int(start_time.split(".")[1]))%60,
             "class":class_period,
             "student":chat_sender,"first name":first_name,"last name":last_name,
             "private":chat_private,
