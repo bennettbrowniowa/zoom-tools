@@ -1,0 +1,6 @@
+{
+  "appKey": "SDK_KEY",
+  "iat": 0, //Provide the current timestamp as the value of this field.
+  "exp": 0, //JWT expiration date (Min:1800 seconds greater than iat value, Max: 48 hours greater than iat value) in epoch format.
+  "tokenExp": 0 //session token expire time, (Min:1800 seconds greater than iat value) in epoch format.
+}
