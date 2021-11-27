@@ -87,18 +87,34 @@ def count_by_student(chats):
         if name not in results:
             results[name]={"count":0,"text":[]}
         results[name]["count"]+=1
-        results[name]["text"]+=[chat["date"],chat["minute"],chat["text"]]
+        results[name]["text"].append([chat["date"],chat["minute"],chat["text"]])
     return results
 
+# load and parse
 all_chat=get_all_chat() #list of (dateclass,timefromto,content)
 chat_list_of_dict = list(map(parse_chat, all_chat))
 classes = ['Pre-Algebra','Algebra II Pd 5 with B Brown', 'Algebra II Pd4 with B Brown', 'Junior High Algebra with B Brown (Pd 1)','HS Algebra (Pd 9 with B Brown)']
 class_chat={}
+#report number of chats by class
 for a_class in classes:
     class_chat[a_class] = filter_chat(chat_list_of_dict,a_class, start_date=None,end_date=None)
     print(a_class, " had ",len(class_chat[a_class]), " chats.")
-counts = count_by_student(class_chat[a_class])
-counts_sorted = sorted(counts.keys())
-#counts_sorted = [counts[key] for key in sorted(counts.keys)]
-for name in counts_sorted[0:4]:
-    print(name,": ",counts[name]["count"],"\t",counts[name]["text"])
+
+
+def gradebook_chat_counts(class_chat):
+    #classes is a list of classname strings
+#   #class_chat is a dictionary with each key a str=a classname
+#   #
+    classes = class_chat.keys()
+    for a_class in classes:
+        print()
+        print(a_class)
+        counts = count_by_student(class_chat[a_class])
+        counts_sorted = sorted(counts.keys(), key=str.casefold)
+        #counts_sorted = [counts[key] for key in sorted(counts.keys)]
+        for name in counts_sorted:
+            print(name,": ",counts[name]["count"])
+            #print("\t",counts[name]["text"])
+
+gradebook_chat_counts(class_chat)
+classes = class_chat.keys()
