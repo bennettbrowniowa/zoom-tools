@@ -1,7 +1,6 @@
+<html>
 <head>
-</head>
-<body>
-	<!-- For either view: import Web Meeting SDK JS dependencies -->
+<!-- For either view: import Web Meeting SDK JS dependencies -->
 	<script src="https://source.zoom.us/2.0.1/lib/vendor/react.min.js"></script>
 	<script src="https://source.zoom.us/2.0.1/lib/vendor/react-dom.min.js"></script>
 	<script src="https://source.zoom.us/2.0.1/lib/vendor/redux.min.js"></script>
@@ -9,21 +8,15 @@
 	<script src="https://source.zoom.us/2.0.1/lib/vendor/lodash.min.js"></script>
 
 	<!-- For Component View -->
-    <script src="https://source.zoom.us/2.0.1/zoom-meeting-embedded-2.0.1.min.js"></script>
-<script>/*const crypto = require('crypto') // crypto comes with Node.js
+    <script src="https://source.zoom.us/2.0.1/zoom-meeting-embedded-2.0.1.min.js"></script></head>
+	<script type='text/javascript' src='zoom_api_keys.js'></script>
 
-function generateSignature(apiKey, apiSecret, meetingNumber, role) {
+<body>
+<div id="meetingSDKElement">
+   <!-- Zoom Meeting SDK Rendered Here -->
+</div>
 
-  // Prevent time sync issue between client signature generation and zoom 
-  const timestamp = new Date().getTime() - 30000
-  const msg = Buffer.from(apiKey + meetingNumber + timestamp + role).toString('base64')
-  const hash = crypto.createHmac('sha256', apiSecret).update(msg).digest('base64')
-  const signature = Buffer.from(`${apiKey}.${meetingNumber}.${timestamp}.${role}.${hash}`).toString('base64')
 
-  return signature
-}
-
-// pass in your Zoom JWT API Key, Zoom JWT API Secret, Zoom Meeting Number, and 0 to join meeting or webinar or 1 to start meeting
-console.log(generateSignature(process.env.API_KEY, process.env.API_SECRET, 123456789, 0))
-*/
-</script></body>
+<script src="zoomTeacherBot.js"></script>
+</body>
+</html>
