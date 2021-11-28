@@ -1,6 +1,17 @@
-{
+header:{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+payload:{
   "appKey": "SDK_KEY",
   "iat": 0, //Provide the current timestamp as the value of this field.
   "exp": 0, //JWT expiration date (Min:1800 seconds greater than iat value, Max: 48 hours greater than iat value) in epoch format.
   "tokenExp": 0 //session token expire time, (Min:1800 seconds greater than iat value) in epoch format.
 }
+/*
+Request user’s ZAK
+To request a User’s ZAK, send a GET request with a userId to /users/{userId]/token and specify type=zak in the body of the request. (If a type is not specified, the default response will be Zoom Token). .
+
+A User ID can either be a userID requested through the  or the user’s email address.
+
+*/
