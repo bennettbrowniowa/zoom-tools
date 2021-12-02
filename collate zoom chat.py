@@ -132,5 +132,23 @@ def print_gradebook_chat_counts(class_chat):
             print(name, ": ", counts[name]["count"])
             #print("\t",counts[name]["text"])
 
-gradebook_chat_counts(class_chat)
+def histogram_of_session(chats):
+    '''chats is a list of dict
+    ' [{"minute":int}]
+    '''
+    minutes=[]
+    for chat in chats:
+        minutes.append(chat["minute"])
+    fig, ax = plt.subplots(1,1)
+    ax.hist(minutes)
+    ax.set_title("# Text responses vs. time into class")
+    ax.set_xlabel("Minutes into class")
+    ax.set_ylabel("# Text Responses")
+    #ax.fig.show()
+    return fig, ax
+
+print_gradebook_chat_counts(class_chat)
 classes = class_chat.keys()
+for classname in classes:
+    fig, ax = histogram_of_session(class_chat[classname])
+    ax.text(0, 0, classname)
