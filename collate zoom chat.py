@@ -58,7 +58,7 @@ def parse_chat(chat):
     last_name = " ".join(chat_sender.split(" ")[1:])
     return {"date":chat_date,
             "time":chat_time ,
-            "minute":(int(chat_time.split(":")[1] - int(start_time.split(".")[1])) % 60,
+            "minute":(int(chat_time.split(":")[1]) - int(start_time.split(".")[1])) % 60,
             "class":class_period,
             "student":chat_sender, "first name":first_name, "last name":last_name,
             "private":chat_private,
@@ -108,6 +108,7 @@ def count_by_student(chats):
 # load and parse
 all_chat=get_all_chat() #list of (dateclass,timefromto,content)
 chat_list_of_dict = list(map(parse_chat, all_chat))
+chats = chat_list_of_dict
 # replace this line by building a set of keys
 classes = ['Pre-Algebra','Algebra II Pd 5 with B Brown', 'Algebra II Pd4 with B Brown', 'Junior High Algebra with B Brown (Pd 1)','HS Algebra (Pd 9 with B Brown)']
 class_chat={}
@@ -117,23 +118,24 @@ for a_class in classes:
     print(a_class, " had ",len(class_chat[a_class]), " chats.")
 
 
-def print_gradebook_chat_counts(class_chat):
+def print_gradebook_chat_counts(class_chat, show_text=False):
     '''classes is a list of classname strings
-#   'class_chat is a dictionary with each key a str=a classname
-#   '''
+    'class_chat is a dictionary with each key a str=a classname
+    '''
     classes = class_chat.keys()
     for a_class in classes:
         print()
         print(a_class)
         counts = count_by_student(class_chat[a_class])
         counts_sorted = sorted(counts.keys(), key=str.casefold)
-        #counts_sorted = [counts[key] for key in sorted(counts.keys)]
         for name in counts_sorted:
             print(name, ": ", counts[name]["count"])
-            #print("\t",counts[name]["text"])
+            if show_text:
+                print("\t",counts[name]["text"]) # each students aggregate text
+print_gradebook_chat_counts(class_chat)
 
 def histogram_of_session(chats):
-    '''chats is a list of dict
+    '''chats is a list of dict, each dict is a chat
     ' [{"minute":int}]
     '''
     minutes=[]
@@ -147,8 +149,30 @@ def histogram_of_session(chats):
     #ax.fig.show()
     return fig, ax
 
-print_gradebook_chat_counts(class_chat)
 classes = class_chat.keys()
 for classname in classes:
     fig, ax = histogram_of_session(class_chat[classname])
     ax.text(0, 0, classname)
+
+def frequency_by_responses(chats):
+    '''chats is a list of dict, each dict is a chat
+    ' creates a histogram
+    '''
+    # Get dict of "lastname, firstname":{"count": int, "text":[[date,minute,text],[d,m,t],...]}
+    counts = count_by_student(chats)
+    count_list = []
+    for student in counts:
+        count_list.append(counts[student]["count"])
+    # Make figure
+    fig, ax = plt.subplots(1, 1)
+    ax.hist(count_list)
+    ax.set_title("# Frequency by Engagement Level")
+    ax.set_xlabel("Number of responses in Zoom chat")
+    ax.set_ylabel("Frequency (Number of Students)")
+    fig.show()
+    return fig, ax
+
+for classname in classes:
+    fig, ax = frequency_by_responses(filter_chat_by_class(chats,classname))
+    ax.text(0,0,classname)
+    fig.show()
