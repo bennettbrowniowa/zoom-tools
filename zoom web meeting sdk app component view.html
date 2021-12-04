@@ -1,3 +1,4 @@
+<!doctype html>
 <html>
 <head>
 <!-- For either view: import Web Meeting SDK JS dependencies -->
@@ -9,14 +10,15 @@
 
 	<!-- For Component View -->
     <script src="https://source.zoom.us/2.0.1/zoom-meeting-embedded-2.0.1.min.js"></script></head>
+	<!--Get the api keys-->
 	<script type='text/javascript' src='zoom_api_keys.js'></script>
-
+	<script src="zoomTeacherBot.js"></script>
 <body>
 <div id="meetingSDKElement">
    <!-- Zoom Meeting SDK Rendered Here -->
 </div>
+<div id="participants"></div>
 
 
-<script src="zoomTeacherBot.js"></script>
 </body>
 </html>
