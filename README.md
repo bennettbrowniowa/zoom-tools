@@ -1,9 +1,9 @@
 # zoom-tools
 
-For teachers using Zoom, this repo offers tools to use usage reports, saved chat files, and to programmatically open zoom meetings and have access to the chat client.
+For teachers using Zoom, this repo offers tools that consume zoom usage reports and saved chat files, and that programmatically open zoom meetings and have access to the chat client.
 
 ## Indpendent components:
-###Attendance after class:
+### Attendance after class:
 A web-based tool for making it easier to use Zoom data for teachers who lack integrations with zoom for attendance and analysis of participation. 
 
 ### In-meeting robot
